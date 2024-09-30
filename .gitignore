@@ -176,6 +176,3 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
-
-# Config
-src/config.ts
