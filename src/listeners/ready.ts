@@ -29,6 +29,9 @@ export class UserEvent extends Listener {
 	public override run(): void {
 		this.printBanner();
 		this.printStoreDebugInformation();
+
+		// Initialize the Lavalink manager with the bot's user ID.
+		this.container.client.manager.init(this.container.client["user"]!.id);
 	}
 
 	/**

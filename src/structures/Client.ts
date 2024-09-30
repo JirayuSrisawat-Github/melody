@@ -1,5 +1,6 @@
 import { LogLevel, SapphireClient } from "@sapphire/framework";
 import { token } from "../config";
+import { Lavalink } from "./Lavalink";
 
 /**
  * The client class for Melody.
@@ -8,6 +9,11 @@ import { token } from "../config";
  */
 export class Client extends SapphireClient {
 	/**
+	 * The Lavalink manager for the client.
+	 */
+	public readonly manager: Lavalink = new Lavalink(this);
+
+	/**
 	 * @param options The options for the client.
 	 */
 	public constructor() {
@@ -15,7 +21,7 @@ export class Client extends SapphireClient {
 			/**
 			 * The logger options for the client.
 			 */
-			logger: { level: LogLevel.Debug },
+			logger: { level: LogLevel[process.env.NODE_ENV === "development" ? "Debug" : "Info"] },
 			/**
 			 * The intents for the client.
 			 *

@@ -11,7 +11,7 @@
     "start": "node @dist/index.js",
     "dev": "run-s build start",
     "watch:start": "tsc-watch --onSuccess \"node ./@dist/index.js\"",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"types/**/*.ts\"",
     "lint": "eslint src/"
   },
   "dependencies": {
@@ -28,7 +28,8 @@
     "@sapphire/type": "^2.4.4",
     "@sapphire/utilities": "^3.15.3",
     "colorette": "^2.0.20",
-    "discord.js": "^14.16.3"
+    "discord.js": "^14.16.3",
+    "sakulink": "^1.2.11"
   },
   "devDependencies": {
     "@sapphire/cli": "^1.9.3",
