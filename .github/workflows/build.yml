@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  test-typescript:
+    name: Build
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        id: bun-install
+        run: bun install
+
+      - name: Lint
+        id: ts-lint
+        run: bun run lint
+
+      - name: Build
+        id: ts-build
+        run: bun run build
