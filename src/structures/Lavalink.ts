@@ -117,6 +117,24 @@ export class Lavalink extends Manager {
 		 */
 		this.on("queueEnd", (player: Player): void => {
 			this.client.logger.info(`Ended queue in ${player.guild}[${player.node.options.identifier}]`);
+
+			/**
+			 * Destroys the player if the queue is empty after 5 seconds.
+			 * This is done to prevent the player from staying in the guild
+			 * forever when the queue is empty.
+			 */
+			setTimeout(() => {
+				const _player = this.client.manager.players.get(player.guild!)!;
+				/**
+				 * Gets the current track of the player.
+				 * If there is no current track, the player is destroyed.
+				 */
+				this.client.logger.debug(`Checking if the queue is empty in ${player.guild}[${player.node.options.identifier}]`);
+				if (!_player.queue.current) {
+					this.client.logger.debug(`The queue is empty in ${player.guild}[${player.node.options.identifier}], destroying the player.`);
+					player.destroy();
+				}
+			}, 5000);
 		});
 	}
 }
