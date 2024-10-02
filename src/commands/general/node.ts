@@ -13,6 +13,7 @@ import ms from "ms";
  * @since 1.0.0
  */
 @ApplyOptions<Command.Options>({
+	// The description of the command.
 	description: "Display nodes information",
 })
 export class UserCommand extends Command {
