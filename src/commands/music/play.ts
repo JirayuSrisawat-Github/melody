@@ -1,8 +1,10 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command } from "@sapphire/framework";
-import { APIEmbed, GuildMember, InteractionResponse } from "discord.js";
+import { APIEmbed, GuildMember, Message } from "discord.js";
 import { defaultVolume } from "../../config";
 import ms from "ms";
+import { pickRandom } from "../../lib/utils";
+import { RandomLoadingMessage } from "../../lib/constants";
 
 @ApplyOptions<Command.Options>({
 	// The description of the command.
@@ -41,7 +43,14 @@ export class UserCommand extends Command {
 	 * @param interaction The interaction that invoked the command.
 	 * @since 1.0.0
 	 */
-	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction): Promise<InteractionResponse<boolean> | undefined> {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction): Promise<Message<boolean>> {
+		/**
+		 * Sends a loading message to the user.
+		 */
+		await interaction.reply({
+			content: pickRandom(RandomLoadingMessage),
+		});
+
 		/**
 		 * The query to search for.
 		 */
@@ -59,7 +68,7 @@ export class UserCommand extends Command {
 		 * If the search result is an error or empty, reply with the error message.
 		 */
 		if ("error" === result.loadType || "empty" === result.loadType)
-			return await interaction.reply({
+			return await interaction.editReply({
 				embeds: [
 					{
 						color: 0xff0000,
@@ -118,6 +127,6 @@ export class UserCommand extends Command {
 		/**
 		 * Sends the embed to the user.
 		 */
-		await interaction.reply({ embeds: [embed] });
+		return await interaction.editReply({ embeds: [embed] });
 	}
 }
