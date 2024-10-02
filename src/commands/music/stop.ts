@@ -1,5 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command } from "@sapphire/framework";
+import { GuildMember } from "discord.js";
 import { Player } from "sakulink";
 
 /**
@@ -32,6 +33,32 @@ export class UserCommand extends Command {
 	 * @since 1.0.0
 	 */
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
+		// Check if the user is in a voice channel
+		if (!(<GuildMember>interaction.member).voice.channel) {
+			// If the user is not in a voice channel, return an error message
+			return await interaction.reply({
+				embeds: [
+					{
+						color: 0xff0000,
+						description: "You are not in a voice channel.",
+					},
+				],
+			});
+		}
+
+		// Check if the user is in the same voice channel as the bot
+		if (interaction.guild!.members.me!.voice.channel && ((<GuildMember>interaction.member).voice.channel!.id !== interaction.guild!.members.me!.voice.channelId)) {
+			// If the user is not in the same voice channel as the bot, return an error message
+			return await interaction.reply({
+				embeds: [
+					{
+						color: 0xff0000,
+						description: "You are not in the same voice channel as me.",
+					},
+				],
+			});
+		}
+
 		// Get the player for the guild
 		const player: Player | undefined = this.container.client.manager.get(interaction.guildId!);
 		if (!player) {

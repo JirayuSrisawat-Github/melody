@@ -1,6 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command } from "@sapphire/framework";
-import { APIEmbed, GuildMember, Message } from "discord.js";
+import { APIEmbed, GuildMember, InteractionResponse, Message } from "discord.js";
 import { defaultVolume } from "../../config";
 import ms from "ms";
 import { pickRandom } from "../../lib/utils";
@@ -43,7 +43,33 @@ export class UserCommand extends Command {
 	 * @param interaction The interaction that invoked the command.
 	 * @since 1.0.0
 	 */
-	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction): Promise<Message<boolean>> {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction): Promise<InteractionResponse<boolean> | Message<boolean>> {
+		// Check if the user is in a voice channel
+		if (!(<GuildMember>interaction.member).voice.channel) {
+			// If the user is not in a voice channel, return an error message
+			return await interaction.reply({
+				embeds: [
+					{
+						color: 0xff0000,
+						description: "You are not in a voice channel.",
+					},
+				],
+			});
+		}
+
+		// Check if the user is in the same voice channel as the bot
+		if (interaction.guild!.members.me!.voice.channel && ((<GuildMember>interaction.member).voice.channel!.id !== interaction.guild!.members.me!.voice.channelId)) {
+			// If the user is not in the same voice channel as the bot, return an error message
+			return await interaction.reply({
+				embeds: [
+					{
+						color: 0xff0000,
+						description: "You are not in the same voice channel as me.",
+					},
+				],
+			});
+		}
+
 		/**
 		 * Sends a loading message to the user.
 		 */
