@@ -1,6 +1,6 @@
 import { Manager, Player, Track, Node } from "sakulink";
 import { Client } from "./Client";
-import { nodes } from "../config";
+import { defaultSearchPlatform, nodes } from "../config";
 
 /**
  * The Lavalink manager class.
@@ -21,7 +21,7 @@ export class Lavalink extends Manager {
 			autoMove: true,
 			autoResume: true,
 			autoPlay: true,
-			defaultSearchPlatform: "youtube music",
+			defaultSearchPlatform: defaultSearchPlatform,
 			nodes: nodes,
 			send: (guildId: string, payload: unknown) => client.guilds.cache.get(guildId)?.shard.send(payload),
 		});
