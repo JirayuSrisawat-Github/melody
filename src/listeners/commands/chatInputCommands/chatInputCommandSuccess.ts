@@ -4,7 +4,7 @@ import { ClientEvents } from "discord.js";
 import { Logger } from "@sapphire/plugin-logger";
 
 /**
- * {@link ChatInputCommandSuccess} event
+ * The "chatInputCommandSuccess" event listener class.
  *
  * @since 1.0.0
  */

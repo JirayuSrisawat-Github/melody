@@ -4,7 +4,7 @@ import { RandomLoadingMessage } from "../../lib/constants";
 import { pickRandom } from "../../lib/utils";
 import { Node } from "sakulink";
 import { stripIndent } from "common-tags";
-import { Message } from "discord.js";
+import { Message, OmitPartialGroupDMChannel } from "discord.js";
 import ms from "ms";
 
 /**
@@ -15,6 +15,7 @@ import ms from "ms";
 @ApplyOptions<Command.Options>({
 	// The description of the command.
 	description: "Display nodes information",
+	aliases: ["nodes"],
 })
 export class UserCommand extends Command {
 	/**
@@ -37,8 +38,38 @@ export class UserCommand extends Command {
 	 * @returns The response to send to the user.
 	 * @since 1.0.0
 	 */
-	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction): Promise<Message<boolean>> {
-		await interaction.reply({ content: pickRandom(RandomLoadingMessage) });
+	public override async chatInputRun(
+		interaction: Command.ChatInputCommandInteraction,
+	): Promise<Message<boolean> | OmitPartialGroupDMChannel<Message<boolean>> | undefined> {
+		return await this.run(interaction);
+	}
+
+	/**
+	 * Runs the command when it is invoked.
+	 *
+	 * @param message The message that invoked the command.
+	 * @returns The response to send to the user.
+	 * @since 1.0.0
+	 */
+	public override async messageRun(message: Message) {
+		return await this.run(message);
+	}
+
+	/**
+	 * Runs the command when it is invoked.
+	 *
+	 * @param interactionOrMessage The message that invoked the command.
+	 * @returns The response to send to the user.
+	 * @since 1.0.0
+	 */
+	private async run(
+		interactionOrMessage: Command.ChatInputCommandInteraction | Message<boolean>,
+	): Promise<Message<boolean> | OmitPartialGroupDMChannel<Message<boolean>> | undefined> {
+		const isMessage = interactionOrMessage instanceof Message;
+		let message: Message<boolean> | null = null;
+
+		if (isMessage) message = await (<Message>interactionOrMessage).reply({ content: pickRandom(RandomLoadingMessage) });
+		else await interactionOrMessage.reply({ content: pickRandom(RandomLoadingMessage) });
 
 		// Get the list of nodes from the manager
 		const nodes = this.container.client.manager.nodes.map((node: Node) => ({
@@ -72,6 +103,7 @@ export class UserCommand extends Command {
 		};
 
 		// Edit the previous message with the embed
-		return await interaction.editReply({ embeds: [embed], content: null });
+		if (isMessage) return await message?.edit({ embeds: [embed], content: null });
+		return await interactionOrMessage.editReply({ embeds: [embed], content: null });
 	}
 }

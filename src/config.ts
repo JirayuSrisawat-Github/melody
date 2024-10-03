@@ -1,6 +1,7 @@
 import { NodeOptions, SearchPlatform } from "sakulink";
 
 export const token: string = "";
+export const prefix: string = "*";
 export const defaultSearchPlatform: SearchPlatform = "youtube music";
 export const defaultVolume: number = 75; 
 export const nodes: NodeOptions[] = [

@@ -1,5 +1,5 @@
 import { LogLevel, SapphireClient } from "@sapphire/framework";
-import { token } from "../config";
+import { prefix, token } from "../config";
 import { Lavalink } from "./Lavalink";
 
 /**
@@ -28,8 +28,24 @@ export class Client extends SapphireClient {
 			 * @remarks
 			 * We use the `GUILDS` and `GUILD_VOICE_STATES` intents because we need to listen to guild events
 			 * and to access the voice states of users.
+			 * We use the `GUILD_MESSAGES` and `MESSAGE_CONTENT` intents because we need to listen to message events.
 			 */
-			intents: 129, // GUILDS, GUILD_VOICE_STATES
+			intents: 33409, // GUILDS, GUILD_VOICE_STATES, GUILD_MESSAGES, MESSAGE_CONTENT
+			/**
+			 * The default prefix for the client.
+			 */
+			defaultPrefix: prefix,
+			/**
+			 * Whether or not to load message command listeners when the client starts.
+			 * This is set to `true` by default, so message command listeners will be loaded when the client starts.
+			 */
+			loadMessageCommandListeners: true,
+
+			/**
+			 * Whether or not to make command matching case-insensitive.
+			 * This is set to `true` by default, so command matching will be case-insensitive.
+			 */
+			caseInsensitiveCommands: true,
 		});
 	}
 

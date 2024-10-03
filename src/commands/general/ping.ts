@@ -1,6 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command } from "@sapphire/framework";
-import { InteractionResponse } from "discord.js";
+import { InteractionResponse, Message } from "discord.js";
 
 /**
  * A command that pings the bot and returns the latency.
@@ -31,9 +31,24 @@ export class UserCommand extends Command {
 	 * @returns The response to send to the user.
 	 * @since 1.0.0
 	 */
-	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction): Promise<InteractionResponse<boolean>> {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction): Promise<InteractionResponse<boolean> | Message<boolean>> {
+		return await this.run(interaction);
+	}
+
+	/**
+	 * Runs the command when it is invoked.
+	 *
+	 * @param message The message that invoked the command.
+	 * @returns The response to send to the user.
+	 * @since 1.0.0
+	 */
+	public override async messageRun(message: Message) {
+		return await this.run(message);
+	}
+
+	private async run(interactionOrMessage: Command.ChatInputCommandInteraction | Message<boolean>) {
 		const content = `Pong! ${Math.round(this.container.client.ws.ping)}ms`; // The content of the response.
 
-		return interaction.reply({ content });
+		return await interactionOrMessage.reply({ content });
 	}
 }

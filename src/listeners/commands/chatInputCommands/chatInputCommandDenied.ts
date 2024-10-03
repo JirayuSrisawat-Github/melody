@@ -3,7 +3,7 @@ import { Listener, UserError } from "@sapphire/framework";
 import { InteractionResponse, Message } from "discord.js";
 
 /**
- * {@link ChatInputCommandDenied} event
+ * The "chatInputCommandDenied" event listener class.
  *
  * @since 1.0.0
  */
